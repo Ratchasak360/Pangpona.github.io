@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>บันทึกผลผลิต</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Arial", sans-serif;
+      background: #fff;
+      color: #333;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+    header h1 {
+      flex: 1;
+      text-align: center;
+      font-size: 16px;
+      margin: 0;
+    }
+    .back-btn {
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* Section */
+    section {
+      padding: 12px 16px;
+    }
+    .section-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      flex: 1;
+      padding: 8px;
+      text-align: center;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      background: #f5f5f5;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .btn.active {
+      background: black;
+      color: white;
+    }
+
+    /* Inputs */
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    /* Table */
+    .summary {
+      padding: 12px 16px;
+    }
+    .summary h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+    }
+    th, td {
+      text-align: left;
+      padding: 8px;
+      font-size: 14px;
+    }
+    th {
+      color: #555;
+    }
+    tr:not(:last-child) {
+      border-bottom: 1px solid #eee;
+    }
+    .total {
+      margin-top: 12px;
+      font-size: 14px;
+    }
+    .total div {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    /* Save button */
+    .save-btn {
+      width: calc(100% - 32px);
+      margin: 20px 16px;
+      padding: 12px;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .save-btn:hover {
+      background: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <span class="back-btn" onclick="goBack()">←</span>
+    <h1>Farm Note</h1>
+    <span style="width: 20px;"></span>
+  </header>
+
+  <!-- Form -->
+  <section>
+    <div class="section-title">เลือกประเภทผลผลิต</div>
+    <input type="text" id="productType" placeholder="เช่น ยางพารา, ข้าว, มันสำปะหลัง">
+
+    <div class="section-title">ผลผลิตรวม</div>
+    <div class="btn-group">
+      <div class="btn active" onclick="selectUnit(this)">กิโลกรัม</div>
+      <div class="btn" onclick="selectUnit(this)">ตัน</div>
+    </div>
+    <input type="number" id="weight" placeholder="ใส่น้ำหนัก">
+
+    <div class="section-title">ราคาที่จะขาย</div>
+    <input type="number" id="price" placeholder="ราคา (บาท)">
+  </section>
+
+  <!-- Summary -->
+  <div class="summary">
+    <h3>รายละเอียด</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>รายการ</th>
+          <th>รายละเอียด</th>
+          <th>ราคา</th>
+        </tr>
+      </thead>
+      <tbody id="summaryTable">
+        <tr><td colspan="3" style="text-align:center; color:#aaa;">ยังไม่มีข้อมูล</td></tr>
+      </tbody>
+    </table>
+
+    <div class="total" id="totals">
+      <div><span>น้ำหนักรวม</span> <span>0</span></div>
+      <div><span>ราคาขาย</span> <span>0 บาท</span></div>
+      <div><span>รวมทั้งสิ้น</span> <span>0 บาท</span></div>
+    </div>
+  </div>
+
+  <!-- Save button -->
+  <button class="save-btn" onclick="saveProduct()">บันทึกผลผลิต</button>
+
+  <script>
+    // ปุ่มย้อนกลับ
+    function goBack() {
+      window.location.href = "dashboard.html";
+    }
+
+    // เปลี่ยนหน่วย
+    function selectUnit(el) {
+      document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    // ฟังก์ชันบันทึกผลผลิต
+    function saveProduct() {
+      const type = document.getElementById("productType").value.trim();
+      const unit = document.querySelector(".btn.active").textContent;
+      const weight = document.getElementById("weight").value.trim();
+      const price = document.getElementById("price").value.trim();
+
+      if (!type || !weight || !price) {
+        alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+        return;
+      }
+
+      const product = {
+        type: type,
+        unit: unit,
+        weight: weight,
+        price: price,
+        total: (parseFloat(weight) * parseFloat(price)).toFixed(2),
+        date: new Date().toLocaleString("th-TH")
+      };
+
+      // เก็บลง LocalStorage
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+      products.push(product);
+      localStorage.setItem("products", JSON.stringify(products));
+
+      // อัปเดตตาราง
+      updateSummary(products);
+      alert("บันทึกผลผลิตเรียบร้อย ✅");
+    }
+
+    // ฟังก์ชันอัปเดตตาราง
+    function updateSummary(products) {
+      const summaryTable = document.getElementById("summaryTable");
+      summaryTable.innerHTML = "";
+
+      let totalWeight = 0;
+      let totalPrice = 0;
+
+      products.slice(-1).forEach(p => {
+        let row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${p.type}</td>
+          <td>${p.weight} ${p.unit}</td>
+          <td>${p.total} บาท</td>
+        `;
+        summaryTable.appendChild(row);
+
+        totalWeight += parseFloat(p.weight);
+        totalPrice += parseFloat(p.total);
+      });
+
+      document.getElementById("totals").innerHTML = `
+        <div><span>น้ำหนักรวม</span> <span>${totalWeight}</span></div>
+        <div><span>ราคาขาย</span> <span>${products.slice(-1)[0].price} บาท/${products.slice(-1)[0].unit}</span></div>
+        <div><span>รวมทั้งสิ้น</span> <span>${totalPrice} บาท</span></div>
+      `;
+    }
+  </script>
+
+</body>
+</html>

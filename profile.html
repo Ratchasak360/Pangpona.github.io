@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farm Note - Profile</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fafafa;
+    }
+
+    header {
+      padding: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .profile-card {
+      background: #fff;
+      margin: 15px;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .profile-card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+
+    .profile-card h2 {
+      font-size: 18px;
+      margin: 8px 0 5px;
+    }
+
+    .profile-card p {
+      margin: 3px 0;
+      color: #555;
+    }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      background: #fff;
+      border-top: 1px solid #ddd;
+      padding: 10px 0;
+    }
+
+    .bottom-nav a {
+      text-align: center;
+      font-size: 12px;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .bottom-nav img {
+      width: 22px;
+      height: 22px;
+      display: block;
+      margin: 0 auto 3px;
+    }
+  </style>
+</head>
+<body>
+  <header>Profile</header>
+
+  <div class="profile-card">
+    <img id="userAvatar" src="" alt="avatar">
+    <h2 id="userName">ชื่อผู้ใช้</h2>
+    <p id="userFarm">ชื่อฟาร์ม</p>
+    <p id="userEmail">email@example.com</p>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <a href="dashboard.html">
+      <img src="https://www.svgrepo.com/show/475700/home-1.svg" alt="home">
+      หน้าแรก
+    </a>
+    <a href="search.html">
+      <img src="https://www.svgrepo.com/show/475677/search.svg" alt="search">
+      ค้นหา
+    </a>
+    <a href="notifications.html">
+      <img src="https://www.svgrepo.com/show/475696/bell.svg" alt="bell">
+      แจ้งเตือน
+    </a>
+    <a href="profile.html">
+      <img src="https://www.svgrepo.com/show/475681/user.svg" alt="profile">
+      โปรไฟล์
+    </a>
+  </div>
+
+  <script>
+    // โหลดข้อมูลผู้ใช้จาก localStorage
+    const userData = JSON.parse(localStorage.getItem("userData"));
+
+    if (userData) {
+      document.getElementById("userName").textContent = userData.name;
+      document.getElementById("userFarm").textContent = userData.farm;
+      document.getElementById("userEmail").textContent = userData.email;
+      document.getElementById("userAvatar").src = userData.avatar;
+    } else {
+      // ถ้าไม่มีข้อมูลผู้ใช้ กลับไปหน้า login
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>
