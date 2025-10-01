@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ค้นหาข้อมูลผลผลิต</title>
+  <style>
+    body {
+      font-family: "Arial", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #333;
+    }
+    header {
+      font-size: 18px;
+      font-weight: bold;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+      position: relative; /* เพื่อวางปุ่มย้อนกลับด้านใน */
+    }
+    .back-btn {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+    }
+    .back-btn img {
+      width: 22px;
+      height: 22px;
+    }
+    .search-bar {
+      display: flex;
+      padding: 10px;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .search-bar button {
+      margin-left: 8px;
+      padding: 8px 12px;
+      border: none;
+      background: #000;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .results {
+      padding: 10px;
+      margin-bottom: 70px; /* กันชน bottom-nav */
+    }
+    .card {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .card strong {
+      font-size: 15px;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .card span {
+      display: block;
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 2px;
+    }
+    .card .price {
+      margin-top: 6px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #000;
+    }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid #ddd;
+      background: #fff;
+      padding: 6px 0;
+    }
+    .bottom-nav a {
+      text-align: center;
+      font-size: 12px;
+      text-decoration: none;
+      color: #333;
+    }
+    .bottom-nav img {
+      width: 22px;
+      height: 22px;
+      display: block;
+      margin: 0 auto 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <a href="dashboard.html" class="back-btn">
+      <img src="img/back-arrow.svg" alt="Back">
+    </a>
+    ค้นหาผลผลิต
+  </header>
+
+  <!-- Search bar -->
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="พิมพ์ชื่อผลผลิต...">
+    <button onclick="searchProduct()">ค้นหา</button>
+  </div>
+
+  <!-- Results -->
+  <div class="results" id="results"></div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <a href="dashboard.html">
+      <img src="img/home.svg">หน้าแรก
+    </a>
+    <a href="search.html">
+      <img src="img/search.svg">ค้นหา
+    </a>
+    <a href="notification.html">
+      <img src="img/bell.svg">แจ้งเตือน
+    </a>
+    <a href="profile.html">
+      <img src="img/user.svg">โปรไฟล์
+    </a>
+    <a href="report.html">
+      <img src="img/report.svg">รายงานปัญหา
+    </a>
+  </div>
+
+  <script>
+    if (!localStorage.getItem("products")) {
+      localStorage.setItem("products", JSON.stringify([
+        { type: "ข้าว", weight: 50, unit: "กก.", price: 2000, date: "2025-10-01" },
+        { type: "อ้อย", weight: 100, unit: "กก.", price: 3500, date: "2025-09-30" },
+        { type: "มันสำปะหลัง", weight: 80, unit: "กก.", price: 2500, date: "2025-09-29" }
+      ]));
+    }
+
+    let products = JSON.parse(localStorage.getItem("products"));
+
+    function searchProduct() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = "";
+
+      const filtered = products.filter(p => p.type.toLowerCase().includes(input));
+
+      if (filtered.length === 0) {
+        resultsDiv.innerHTML = "<p style='color:#888;'>ไม่พบผลผลิตที่ค้นหา</p>";
+        return;
+      }
+
+      filtered.forEach(p => {
+        let card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <strong>${p.type}</strong>
+          <span>น้ำหนัก: ${p.weight} ${p.unit}</span>
+          <span>วันที่: ${p.date}</span>
+          <div class="price">ราคา: ${p.price} บาท</div>
+        `;
+        resultsDiv.appendChild(card);
+      });
+    }
+
+    document.getElementById("searchInput").addEventListener("keyup", function(event) {
+      if (event.key === "Enter") {
+        searchProduct();
+      }
+    });
+  </script>
+
+</body>
+</html>

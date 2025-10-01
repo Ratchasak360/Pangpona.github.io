@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>การแจ้งเตือน</title>
+  <style>
+    body {
+      font-family: "Arial", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #333;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      font-size: 18px;
+      font-weight: bold;
+      background: #f8f8f8;
+      position: relative;
+      justify-content: center;
+    }
+
+    /* ปุ่มย้อนกลับ (แบบไม่มีวงกลมสีเทา) */
+    .back-btn {
+      position: absolute;
+      left: 10px;
+      background: none;   /* ❌ ไม่มีพื้นหลัง */
+      border: none;       /* ❌ ไม่มีเส้นขอบ */
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .back-btn img {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+      border-bottom: 1px solid #eee;
+      background: #fff;
+    }
+    .tab {
+      flex: 1;
+      padding: 10px 0;
+      text-align: center;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .tab.active {
+      font-weight: bold;
+      color: #fff;
+      background: #000;
+      border-radius: 20px;
+      margin: 5px;
+    }
+
+    /* Notification List */
+    .notification-list {
+      padding: 20px;
+      text-align: center;
+      color: #888;
+      margin-bottom: 70px; /* กันชน bottom nav */
+    }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid #ddd;
+      background: #fff;
+      padding: 6px 0;
+    }
+    .bottom-nav a {
+      text-align: center;
+      font-size: 12px;
+      text-decoration: none;
+      color: #333;
+    }
+    .bottom-nav img {
+      width: 22px;
+      height: 22px;
+      display: block;
+      margin: 0 auto 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <button class="back-btn" onclick="location.href='dashboard.html'">
+      <img src="img/back-arrow.svg" alt="Back">
+    </button>
+    การแจ้งเตือน
+  </header>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="location.href='notification.html'">ล่าสุด</div>
+    <div class="tab" onclick="location.href='messages.html'">ข้อความ</div>
+  </div>
+
+  <!-- Notifications (ว่างเปล่า) -->
+  <div class="notification-list">
+    ยังไม่มีการแจ้งเตือน
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <a href="dashboard.html">
+      <img src="img/home.svg">หน้าแรก
+    </a>
+    <a href="search.html">
+      <img src="img/search.svg">ค้นหา
+    </a>
+    <a href="notification.html">
+      <img src="img/bell.svg">แจ้งเตือน
+    </a>
+    <a href="profile.html">
+      <img src="img/user.svg">โปรไฟล์
+    </a>
+    <a href="report.html">
+      <img src="img/report.svg">รายงานปัญหา
+    </a>
+  </div>
+
+</body>
+</html>

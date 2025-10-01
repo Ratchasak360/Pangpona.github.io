@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>รายได้จากผลผลิต - Farm Note</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Arial", sans-serif;
+      background: #fff;
+      color: #333;
+    }
+
+    /* Header */
+    header {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f8f8f8;
+      position: relative; /* ใช้เพื่อให้ปุ่ม back อยู่ใน header */
+    }
+    header h1 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    /* Back button */
+    .back-btn {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .back-btn img {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* Container */
+    .container {
+      padding: 16px;
+      padding-bottom: 100px; /* กันไม่ให้ชน bottom nav */
+      text-align: center;
+    }
+    canvas {
+      margin-top: 20px;
+      max-width: 100%;
+    }
+    .total {
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #000;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+    }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid #ddd;
+      background: #fff;
+      padding: 6px 0;
+    }
+    .bottom-nav a {
+      text-align: center;
+      font-size: 12px;
+      text-decoration: none;
+      color: #333;
+    }
+    .bottom-nav img {
+      width: 22px;
+      height: 22px;
+      display: block;
+      margin: 0 auto 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <a href="dashboard.html" class="back-btn">
+      <img src="img/back-arrow.svg" alt="Back">
+    </a>
+    <h1>รายได้จากผลผลิต</h1>
+  </header>
+
+  <!-- Content -->
+  <div class="container">
+    <canvas id="barChart"></canvas>
+    <canvas id="lineChart"></canvas>
+    <div class="total" id="totalSummary">รวมรายได้: 0 บาท</div>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <a href="dashboard.html">
+      <img src="img/home.svg">หน้าแรก
+    </a>
+    <a href="search.html">
+      <img src="img/search.svg">ค้นหา
+    </a>
+    <a href="notification.html">
+      <img src="img/bell.svg">แจ้งเตือน
+    </a>
+    <a href="profile.html">
+      <img src="img/user.svg">โปรไฟล์
+    </a>
+    <a href="report.html">
+      <img src="img/report.svg">รายงานปัญหา
+    </a>
+  </div>
+
+  <script>
+    let barChart, lineChart;
+
+    function loadSummary() {
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+
+      if (products.length === 0) {
+        document.querySelector(".container").innerHTML =
+          "<p style='color:#888;'>ยังไม่มีข้อมูลรายได้</p>";
+        return;
+      }
+
+      // รวมรายได้ตามวันที่
+      let summary = {};
+      let total = 0;
+      products.forEach(p => {
+        let weight = parseFloat(p.weight) || 0;
+        let price = parseFloat(p.price) || 0;
+        let date = p.date || "ไม่ระบุ";
+        let income = weight * price;
+
+        if (!summary[date]) summary[date] = 0;
+        summary[date] += income;
+        total += income;
+      });
+
+      // อัปเดตรวมรายได้ทั้งหมด
+      document.getElementById("totalSummary").textContent =
+        "รวมรายได้: " + total.toFixed(2) + " บาท";
+
+      const labels = Object.keys(summary);
+      const data = Object.values(summary);
+
+      // ลบกราฟเก่า
+      if (barChart) barChart.destroy();
+      if (lineChart) lineChart.destroy();
+
+      // กราฟแท่ง
+      const barCtx = document.getElementById("barChart").getContext("2d");
+      barChart = new Chart(barCtx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "รายได้ (บาท)",
+            data: data,
+            backgroundColor: "rgba(0,0,0,0.7)"
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: true } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+
+      // กราฟเส้น
+      const lineCtx = document.getElementById("lineChart").getContext("2d");
+      lineChart = new Chart(lineCtx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "แนวโน้มรายได้ (บาท)",
+            data: data,
+            borderColor: "rgba(0,0,0,0.9)",
+            backgroundColor: "rgba(0,0,0,0.3)",
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: true } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+
+    loadSummary();
+  </script>
+
+</body>
+</html>

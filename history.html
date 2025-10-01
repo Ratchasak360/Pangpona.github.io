@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ประวัติการบันทึก - Farm Note</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Arial", sans-serif;
+      background: #fff;
+      color: #333;
+    }
+
+    /* Header */
+    header {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f8f8f8;
+      position: relative; /* เพื่อวางปุ่ม back */
+    }
+    header h1 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    /* Back button */
+    .back-btn {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .back-btn img {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* Content */
+    .container {
+      padding: 16px;
+      padding-bottom: 80px; /* กันไม่ให้ชน bottom nav */
+    }
+    .record-card {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      background: #fafafa;
+    }
+    .record-card strong {
+      font-size: 15px;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .record-card span {
+      display: block;
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 2px;
+    }
+    .record-card .price {
+      margin-top: 6px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #000;
+    }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid #ddd;
+      background: #fff;
+      padding: 6px 0;
+    }
+    .bottom-nav a {
+      text-align: center;
+      font-size: 12px;
+      text-decoration: none;
+      color: #333;
+    }
+    .bottom-nav img {
+      width: 22px;
+      height: 22px;
+      display: block;
+      margin: 0 auto 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <a href="dashboard.html" class="back-btn">
+      <img src="img/back-arrow.svg" alt="Back">
+    </a>
+    <h1>ประวัติการบันทึก</h1>
+  </header>
+
+  <!-- Content -->
+  <div class="container" id="historyList">
+    <p style="color:#888;">ยังไม่มีประวัติการบันทึก</p>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <a href="dashboard.html">
+      <img src="img/home.svg">หน้าแรก
+    </a>
+    <a href="search.html">
+      <img src="img/search.svg">ค้นหา
+    </a>
+    <a href="notification.html">
+      <img src="img/bell.svg">แจ้งเตือน
+    </a>
+    <a href="profile.html">
+      <img src="img/user.svg">โปรไฟล์
+    </a>
+    <a href="report.html">
+      <img src="img/report.svg">รายงานปัญหา
+    </a>
+  </div>
+
+  <script>
+    function loadHistory() {
+      const historyList = document.getElementById("historyList");
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+
+      if (products.length === 0) {
+        historyList.innerHTML = "<p style='color:#888;'>ยังไม่มีประวัติการบันทึก</p>";
+        return;
+      }
+
+      historyList.innerHTML = "";
+      products.reverse().forEach(p => {
+        let card = document.createElement("div");
+        card.className = "record-card";
+
+        card.innerHTML = `
+          <strong>${p.type}</strong>
+          <span>น้ำหนัก: ${p.weight} ${p.unit}</span>
+          <span>วันที่: ${p.date}</span>
+          <div class="price">ราคา: ${p.price} บาท</div>
+        `;
+        historyList.appendChild(card);
+      });
+    }
+
+    loadHistory();
+  </script>
+
+</body>
+</html>

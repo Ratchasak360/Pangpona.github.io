@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>รายงานปัญหา - Farm Note</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Arial", sans-serif;
+      background: #fff;
+      color: #333;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      position: relative;
+    }
+    header h1 {
+      font-size: 16px;
+      margin: 0;
+    }
+    .back-btn {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+    }
+    .back-btn img {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* Content */
+    .container {
+      padding: 16px;
+      padding-bottom: 80px; /* กันไม่ให้เนื้อหาชน nav */
+    }
+    .container label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    .container input, .container textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .container button {
+      width: 100%;
+      padding: 12px;
+      background: #000;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .container button:hover {
+      background: #333;
+    }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid #ddd;
+      background: #fff;
+      padding: 6px 0;
+    }
+    .bottom-nav a {
+      text-align: center;
+      font-size: 12px;
+      text-decoration: none;
+      color: #333;
+    }
+    .bottom-nav img {
+      width: 22px;
+      height: 22px;
+      display: block;
+      margin: 0 auto 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <a href="dashboard.html" class="back-btn">
+      <img src="img/back-arrow.svg" alt="Back">
+    </a>
+    <h1>รายงานปัญหา</h1>
+  </header>
+
+  <!-- Content -->
+  <div class="container">
+    <label for="title">หัวข้อปัญหา</label>
+    <input type="text" id="title" placeholder="กรอกหัวข้อปัญหา">
+
+    <label for="detail">รายละเอียด</label>
+    <textarea id="detail" rows="5" placeholder="อธิบายรายละเอียดปัญหา..."></textarea>
+
+    <button onclick="submitReport()">ส่งรายงาน</button>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <a href="dashboard.html">
+      <img src="img/home.svg">หน้าแรก
+    </a>
+    <a href="search.html">
+      <img src="img/search.svg">ค้นหา
+    </a>
+    <a href="notification.html">
+      <img src="img/bell.svg">แจ้งเตือน
+    </a>
+    <a href="profile.html">
+      <img src="img/user.svg">โปรไฟล์
+    </a>
+    <a href="report.html">
+      <img src="img/report.svg">รายงานปัญหา
+    </a>
+  </div>
+
+  <script>
+    function submitReport() {
+      const title = document.getElementById("title").value.trim();
+      const detail = document.getElementById("detail").value.trim();
+
+      if (!title || !detail) {
+        alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+        return;
+      }
+
+      let reports = JSON.parse(localStorage.getItem("reports")) || [];
+      reports.push({ title, detail, date: new Date().toLocaleString() });
+      localStorage.setItem("reports", JSON.stringify(reports));
+
+      alert("ส่งรายงานสำเร็จ!");
+      document.getElementById("title").value = "";
+      document.getElementById("detail").value = "";
+    }
+  </script>
+
+</body>
+</html>
